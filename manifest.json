@@ -1,0 +1,18 @@
+{
+    "manifest_version": 3,
+    "name": "Song generator",
+    "version": "0.1.0",
+    "description": "Create songs about TV shows and movies",
+    "permissions": ["tabs"],
+    "host_permissions": ["https://tuna.voicemod.net/*"],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://tuna.voicemod.net/text-to-song/*"],
+            "css": ["style.css"],
+            "js": ["index.js"]
+        }
+    ]
+}

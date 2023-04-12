@@ -1,0 +1,27 @@
+.text-input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    color: #FBFBFB;
+    background-color: #525356;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    outline: none !important;
+    transition: all .4s ease;
+}
+
+.lyrics-button {
+    display: block;
+    float: right;
+    margin: 16px 0 0 0;
+    cursor: pointer;
+    color: #1E2023;
+    background-color: #00FFF6;
+    line-height: 1.5;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    transition: color .25s ease, background .25s ease;
+}
+
+.lyrics-button:hover {
+    background-color: #D8FFFC;
+}
