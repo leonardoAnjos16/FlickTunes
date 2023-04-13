@@ -34,10 +34,13 @@ chrome.runtime.onMessage.addListener(message => {
                 // Call ChatGPT to generate lyrics and update lyrics input
                 (async () => {
                     button.disabled = true;
+                    lyricsTextArea.value = '';
+                    lyricsTextArea.dispatchEvent(new Event('input'));
+
                     const lyrics = await chrome.runtime.sendMessage({ production: input.value });
-                    button.disabled = false;
                     console.log(lyrics);
                     
+                    button.disabled = false;
                     lyricsTextArea.value = lyrics;
                     lyricsTextArea.dispatchEvent(new Event('input'));
                 })();
