@@ -8,7 +8,7 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     const headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer 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',
+        'Authorization': 'Bearer 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',
     };
     
     const { production } = request;
