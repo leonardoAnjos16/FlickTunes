@@ -25,3 +25,8 @@
 .lyrics-button:hover {
     background-color: #D8FFFC;
 }
+
+.lyrics-button[disabled] {
+    background-color: #525356;
+    pointer-events: none;
+}
