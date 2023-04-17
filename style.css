@@ -30,3 +30,8 @@
     background-color: #525356;
     pointer-events: none;
 }
+
+.waitingText{
+    text-align: center;
+    margin-left: 100px;
+}

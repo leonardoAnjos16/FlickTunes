@@ -23,8 +23,8 @@ chrome.runtime.onMessage.addListener(message => {
             console.log(lyricsTextArea)
             lyricsTextArea.setAttribute('disabled', 'true');
             lyricsTextArea.removeAttribute('placeholder');
-            // lyricsTextArea.style.visibility = 'hidden';
-            // lyricsTextArea.style.height = '0';
+            lyricsTextArea.style.visibility = 'hidden';
+            lyricsTextArea.style.height = '0';
             
             // Add button for generating lyrics
             const button = document.createElement('button');
@@ -34,8 +34,13 @@ chrome.runtime.onMessage.addListener(message => {
             button.onclick = () => {
                 // Call ChatGPT to generate lyrics and update lyrics input
                 (async () => {
+
                     button.disabled = true;
-                    lyricsTextArea.value = '';
+                    const waiting = document.createElement('h3');
+                    waiting.classList.add('waitingText')
+                    const elText = document.createTextNode('Your lyrics will be ready soon');
+                    waiting.append(elText);
+                    lyricsTextArea.insertAdjacentElement('beforebegin', waiting);
                     lyricsTextArea.dispatchEvent(new Event('input'));
 
                     let {lyrics, chorus} = await chrome.runtime.sendMessage({ production: input.value });
@@ -52,6 +57,7 @@ chrome.runtime.onMessage.addListener(message => {
                     }
                     button.disabled = false;
                     lyricsTextArea.value = chorus;
+                    waiting.remove()
                     lyricsTextArea.dispatchEvent(new Event('input'));
                 })();
             }
