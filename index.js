@@ -67,15 +67,26 @@ chrome.runtime.onMessage.addListener(message => {
                 // Call ChatGPT to generate lyrics and update lyrics input
                 (async () => {
                     button.disabled = true;
-                    const waiting = document.createElement('h3');
-                    waiting.classList.add('waitingText')
-                    const elText = document.createTextNode('Your lyrics will be ready soon');
-                    waiting.append(elText);
-                    lyricsTextArea.insertAdjacentElement('beforebegin', waiting);
-
-                    clearNode(allLyrics);
                     lyricsTextArea.value = '';
                     lyricsTextArea.dispatchEvent(new Event('input'));
+                    clearNode(allLyrics);
+                    
+                    const waiting = document.createElement('h3');
+                    waiting.classList.add('waitingText')
+                    
+                    const waitingText = document.createTextNode('Your lyrics will be ready soon');
+                    waiting.append(waitingText);
+
+                    const spinner = document.createElement('div');
+                    spinner.classList.add('spinner');
+                    
+                    const waitingContainer = document.createElement('div');
+                    waitingContainer.classList.add('waiting-container');
+
+                    waitingContainer.append(waiting);
+                    waitingContainer.append(spinner);
+
+                    lyricsTextArea.insertAdjacentElement('beforebegin', waitingContainer);
 
                     let {lyrics, chorus} = await chrome.runtime.sendMessage({ production: input.value, type: selected.value });
 
@@ -100,8 +111,8 @@ chrome.runtime.onMessage.addListener(message => {
                     });
 
                     lyricsTextArea.insertAdjacentElement('afterEnd', allLyrics);
+                    waitingContainer.remove();
 
-                    waiting.remove()
                     button.disabled = false;
                     lyricsTextArea.value = chorus;
                     lyricsTextArea.dispatchEvent(new Event('input'));
