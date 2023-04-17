@@ -36,6 +36,13 @@
     margin-left: 100px;
 }
 
+.verse-container {
+    margin-bottom: 20px;
+}
+
+.verse-row {
+    margin: 0;
+}
 
 .pos{
     display: flex;

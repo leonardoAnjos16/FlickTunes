@@ -1,3 +1,15 @@
+const clearNode = node => {
+    const descendants = []
+    const getDescendants = node => {
+        descendants.push(node);
+        node.childNodes.forEach(getDescendants);
+    };
+
+    getDescendants(node);
+    descendants.forEach(node => node.remove());
+    node.remove();
+};
+
 chrome.runtime.onMessage.addListener(message => {
     if (message === 'page-loaded') {
         const tabsContainer = document.getElementsByClassName('text-to-song-tabs')[0];
@@ -44,17 +56,25 @@ chrome.runtime.onMessage.addListener(message => {
             const button = document.createElement('button');
             button.textContent = 'Generate lyrics';
             button.classList.add('lyrics-button');
+
+            const createSongButton = document.querySelector('button[aria-label="Create song"]');
+            createSongButton.firstChild.childNodes[6].textContent = 'Create chorus audio';
             
+            const allLyrics = document.createElement('div');
+            lyricsTextArea.insertAdjacentElement('afterEnd', allLyrics);
+
             button.onclick = () => {
                 // Call ChatGPT to generate lyrics and update lyrics input
                 (async () => {
-
                     button.disabled = true;
                     const waiting = document.createElement('h3');
                     waiting.classList.add('waitingText')
                     const elText = document.createTextNode('Your lyrics will be ready soon');
                     waiting.append(elText);
                     lyricsTextArea.insertAdjacentElement('beforebegin', waiting);
+
+                    clearNode(allLyrics);
+                    lyricsTextArea.value = '';
                     lyricsTextArea.dispatchEvent(new Event('input'));
 
                     let {lyrics, chorus} = await chrome.runtime.sendMessage({ production: input.value, type: selected.value });
@@ -62,16 +82,28 @@ chrome.runtime.onMessage.addListener(message => {
                     let splicedChorus = chorus.split('\n');
                     splicedChorus = splicedChorus[0].toLowerCase().includes('chorus') ? splicedChorus.splice(1) : splicedChorus;
                     chorus = splicedChorus.join('\n');
-                    const lyricSplited = lyrics.split('\n\n');
-                    for(let i = lyricSplited.length-1; i >= 0; i--){
-                        const allLyric = document.createElement('p');
-                        const node = document.createTextNode(lyricSplited[i]);
-                        allLyric.append(node)
-                        lyricsTextArea.insertAdjacentElement('afterEnd', allLyric)
-                    }
+
+                    const verses = lyrics.split('\n\n');
+                    verses.forEach(verse => {
+                        const verseContainer = document.createElement('div');
+                        verse.split('\n').slice(1).forEach(line => {
+                            const paragraph = document.createElement('p');
+                            const text = document.createTextNode(line);
+                            paragraph.append(text);
+
+                            paragraph.classList.add('verse-row');
+                            verseContainer.append(paragraph);
+                        });
+
+                        verseContainer.classList.add('verse-container');
+                        allLyrics.append(verseContainer);
+                    });
+
+                    lyricsTextArea.insertAdjacentElement('afterEnd', allLyrics);
+
+                    waiting.remove()
                     button.disabled = false;
                     lyricsTextArea.value = chorus;
-                    waiting.remove()
                     lyricsTextArea.dispatchEvent(new Event('input'));
                 })();
             }
