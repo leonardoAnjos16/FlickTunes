@@ -9,7 +9,21 @@ chrome.runtime.onMessage.addListener(message => {
             // Change title
             const content = document.getElementsByClassName('step-lyrics')[0];
             content.firstChild.firstChild.textContent = 'Write down the name of a movie or TV show!';
-            
+            const positioning = document.createElement('div')
+            positioning.classList.add('pos')
+            const pos =  ['TV Show', 'Movie'];
+            const selected = document.createElement('select');
+
+            for(var i =0; i<pos.length; i++){
+                var option = document.createElement('option')
+                option.value= pos[i]
+                option.text = pos[i]
+                selected.appendChild(option)
+            }
+            positioning.append(selected)
+            content.firstChild.firstChild.insertAdjacentElement('afterEnd', positioning)
+            selected.classList.add('select')
+
             // Add input for movie/TV show
             const input = document.createElement('input');
             input.setAttribute('placeholder', 'Movie or TV show');
@@ -43,7 +57,7 @@ chrome.runtime.onMessage.addListener(message => {
                     lyricsTextArea.insertAdjacentElement('beforebegin', waiting);
                     lyricsTextArea.dispatchEvent(new Event('input'));
 
-                    let {lyrics, chorus} = await chrome.runtime.sendMessage({ production: input.value });
+                    let {lyrics, chorus} = await chrome.runtime.sendMessage({ production: input.value, type: selected.value });
 
                     let splicedChorus = chorus.split('\n');
                     splicedChorus = splicedChorus[0].toLowerCase().includes('chorus') ? splicedChorus.splice(1) : splicedChorus;
@@ -74,5 +88,6 @@ chrome.runtime.onMessage.addListener(message => {
         observer.observe(lyricsTab, { attributes: true });
         if (lyricsTab.classList.contains('text-to-song-tabs__tab-active'))
             changeLyricsTabContent();
+        
     }
 });

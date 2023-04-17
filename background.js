@@ -11,12 +11,12 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
         'Authorization': 'Bearer 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',
     };
     
-    const { production } = request;
+    const { production, type } = request;
     let data = {
         model: 'gpt-3.5-turbo',
         messages: [{
             role: 'user',
-            content: `Create a song about ${production}`,
+            content: `Create a song about the ${type} ${production}`,
         }],
     };
 

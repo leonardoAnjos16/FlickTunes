@@ -35,3 +35,19 @@
     text-align: center;
     margin-left: 100px;
 }
+
+
+.pos{
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.select{
+    text-align: center;
+    border: none;
+    border-radius: 2px;
+    width: 100px;
+    height: 25px;
+    cursor: pointer;
+}
