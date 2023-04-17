@@ -20,6 +20,7 @@ chrome.runtime.onMessage.addListener(message => {
             
             // Disable and hide input for lyrics
             const lyricsTextArea = document.getElementsByClassName('step-lyrics__textInput')[0];
+            console.log(lyricsTextArea)
             lyricsTextArea.setAttribute('disabled', 'true');
             lyricsTextArea.removeAttribute('placeholder');
             // lyricsTextArea.style.visibility = 'hidden';
@@ -42,7 +43,13 @@ chrome.runtime.onMessage.addListener(message => {
                     let splicedChorus = chorus.split('\n');
                     splicedChorus = splicedChorus[0].toLowerCase().includes('chorus') ? splicedChorus.splice(1) : splicedChorus;
                     chorus = splicedChorus.join('\n');
-
+                    const lyricSplited = lyrics.split('\n\n');
+                    for(let i = lyricSplited.length-1; i >= 0; i--){
+                        const allLyric = document.createElement('p');
+                        const node = document.createTextNode(lyricSplited[i]);
+                        allLyric.append(node)
+                        lyricsTextArea.insertAdjacentElement('afterEnd', allLyric)
+                    }
                     button.disabled = false;
                     lyricsTextArea.value = chorus;
                     lyricsTextArea.dispatchEvent(new Event('input'));
