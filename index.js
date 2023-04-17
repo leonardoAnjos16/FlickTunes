@@ -37,11 +37,14 @@ chrome.runtime.onMessage.addListener(message => {
                     lyricsTextArea.value = '';
                     lyricsTextArea.dispatchEvent(new Event('input'));
 
-                    const lyrics = await chrome.runtime.sendMessage({ production: input.value });
-                    console.log(lyrics);
-                    
+                    let {lyrics, chorus} = await chrome.runtime.sendMessage({ production: input.value });
+
+                    let splicedChorus = chorus.split('\n');
+                    splicedChorus = splicedChorus[0].toLowerCase().includes('chorus') ? splicedChorus.splice(1) : splicedChorus;
+                    chorus = splicedChorus.join('\n');
+
                     button.disabled = false;
-                    lyricsTextArea.value = lyrics;
+                    lyricsTextArea.value = chorus;
                     lyricsTextArea.dispatchEvent(new Event('input'));
                 })();
             }

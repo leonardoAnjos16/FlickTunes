@@ -12,7 +12,7 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     };
     
     const { production } = request;
-    const data = {
+    let data = {
         model: 'gpt-3.5-turbo',
         messages: [{
             role: 'user',
@@ -26,7 +26,20 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
         body: JSON.stringify(data)
     })
         .then(response => response.json())
-        .then(response => sendResponse(response.choices[0].message.content));
-
+        .then(response => {
+            const lyrics = response.choices[0].message.content
+            data.messages[0].content = `Give me the chorus of this song: ${lyrics}`
+            fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(data)
+            })
+            .then(response2 => response2.json())
+            .then(response2 => {
+                console.log(response2.choices[0].message.content)
+                const chorus = response2.choices[0].message.content;
+                sendResponse({lyrics, chorus })
+            })
+        })
     return true;
 });
