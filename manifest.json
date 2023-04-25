@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Song generator",
+    "name": "FlickTunes",
     "version": "0.1.0",
     "description": "Create songs about TV shows and movies",
     "permissions": ["tabs"],
